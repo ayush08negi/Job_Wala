@@ -16,6 +16,7 @@ const category = [
 const CategoryCarousel = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    
     const searchJobHandler = (query) => {
         dispatch(setSearchedQuery(query));
         navigate("/browse");
