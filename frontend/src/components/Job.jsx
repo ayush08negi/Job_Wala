@@ -1,45 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
-import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { Avatar, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from 'sonner';
-import { USER_API_END_POINT } from '@/utils/constant'
 
-const Job = ({ job, bookmarkedJobs, refreshBookmarks }) => {
+const Job = ({ job }) => {
     const navigate = useNavigate();
-    const [bookmarked, setBookmarked] = useState(false);
-
-    useEffect(() => {
-        if (bookmarkedJobs?.includes(job._id)) {
-            setBookmarked(true);
-        } else {
-            setBookmarked(false);
-        }
-    }, [bookmarkedJobs, job._id]);
-
-const handleBookmark = async () => {
-  try {
-    if (bookmarked) {
-      await axios.delete(`${USER_API_END_POINT}/bookmark/${job._id}`,{
-        withCredentials: true,
-      });
-      toast.success("Bookmark removed");
-    } else {
-      await axios.post(`${USER_API_END_POINT}/bookmark/${job._id}`,{
-        withCredentials: true,
-      });
-      toast.success("Bookmark added");
-    }
-    setBookmarked(!bookmarked);
-    if (onBookmarkToggle) onBookmarkToggle(); // to refresh the parent state
-  } catch (error) {
-    toast.error("Error updating bookmark");
-    console.error(error);
-  }
-};
 
 
     const getShortDescription = (text) => {
@@ -51,7 +17,7 @@ const handleBookmark = async () => {
         const createdAt = new Date(mongodbTime);
         const currentTime = new Date();
         const timeDifference = currentTime - createdAt;
-        return Math.floor(timeDifference / (1000 * 24 * 60 * 60));
+        return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     };
 
     return (
@@ -60,12 +26,9 @@ const handleBookmark = async () => {
                 <p className='text-sm text-gray-500'>
                     {daysAgoFunction(job?.createdAt) === 0 ? "Today" : `${daysAgoFunction(job?.createdAt)} days ago`}
                 </p>
-                <Button onClick={handleBookmark} variant="outline" className="rounded-full" size="icon">
-                    {bookmarked ? <BookmarkCheck className="text-blue-500" /> : <Bookmark />}
-                </Button>
+            
             </div>
 
-            
             <div className='flex items-center gap-2 my-2'>
                 <Button className="p-6" variant="outline" size="icon">
                     <Avatar>
@@ -78,7 +41,6 @@ const handleBookmark = async () => {
                 </div>
             </div>
 
-            {/* Job Info */}
             <div>
                 <h1 className='font-bold text-lg my-2'>{job?.title}</h1>
                 <p className='text-sm text-gray-600'>
@@ -102,7 +64,7 @@ const handleBookmark = async () => {
 
             <div className='flex items-center gap-4 mt-4'>
                 <Button onClick={() => navigate(`/description/${job?._id}`)} variant="outline">Details</Button>
-                <Button className="bg-[#7209b7]">Save For Later</Button>
+                {/* <Button className="bg-[#7209b7]">Save For Later</Button> */}
             </div>
         </div>
     );
