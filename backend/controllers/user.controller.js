@@ -126,7 +126,7 @@ export const updateProfile = async (req, res) => {
         if(skills){
             skillsArray = skills.split(",");
         }
-        const userId = req.id; // middleware authentication
+        const userId = req.id; 
         let user = await User.findById(userId);
 
         if (!user) {
@@ -135,17 +135,16 @@ export const updateProfile = async (req, res) => {
                 success: false
             })
         }
-        // updating data
+        
         if(fullname) user.fullname = fullname
         if(email) user.email = email
         if(phoneNumber)  user.phoneNumber = phoneNumber
         if(bio) user.profile.bio = bio
         if(skills) user.profile.skills = skillsArray
       
-        // resume comes later here...
         if(cloudResponse){
-            user.profile.resume = cloudResponse.secure_url // save the cloudinary url
-            user.profile.resumeOriginalName = file.originalname // Save the original file name
+            user.profile.resume = cloudResponse.secure_url 
+            user.profile.resumeOriginalName = file.originalname 
         }
 
 
@@ -169,3 +168,29 @@ export const updateProfile = async (req, res) => {
         console.log(error);
     }
 }
+
+export const addBookmark = async (req, res) => {
+    const { jobId } = req.params;
+    const userId = req.id; 
+
+    const user = await User.findById(userId);
+    if (!user.bookmarks.includes(jobId)) {
+        user.bookmarks.push(jobId);
+        await user.save();
+    }
+
+    return res.status(200).json({ message: "Bookmark added", success: true });
+};
+
+export const removeBookmark = async (req, res) => {
+    const { jobId } = req.params;
+    const userId = req.id;
+
+    const user = await User.findById(userId);
+    user.bookmarks = user.bookmarks.filter(
+        (bookmark) => bookmark.toString() !== jobId
+    );
+    await user.save();
+
+    return res.status(200).json({ message: "Bookmark removed", success: true });
+};

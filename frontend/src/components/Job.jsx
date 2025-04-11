@@ -1,12 +1,51 @@
-import React from 'react'
-import { Button } from './ui/button'
-import { Bookmark } from 'lucide-react'
-import { Avatar, AvatarImage } from './ui/avatar'
-import { Badge } from './ui/badge'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Button } from './ui/button';
+import { Bookmark, BookmarkCheck } from 'lucide-react';
+import { Avatar, AvatarImage } from './ui/avatar';
+import { Badge } from './ui/badge';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { USER_API_END_POINT } from '@/utils/constant'
 
-const Job = ({ job }) => {
+const Job = ({ job, bookmarkedJobs, refreshBookmarks }) => {
     const navigate = useNavigate();
+    const [bookmarked, setBookmarked] = useState(false);
+
+    useEffect(() => {
+        if (bookmarkedJobs?.includes(job._id)) {
+            setBookmarked(true);
+        } else {
+            setBookmarked(false);
+        }
+    }, [bookmarkedJobs, job._id]);
+
+const handleBookmark = async () => {
+  try {
+    if (bookmarked) {
+      await axios.delete(`${USER_API_END_POINT}/bookmark/${job._id}`,{
+        withCredentials: true,
+      });
+      toast.success("Bookmark removed");
+    } else {
+      await axios.post(`${USER_API_END_POINT}/bookmark/${job._id}`,{
+        withCredentials: true,
+      });
+      toast.success("Bookmark added");
+    }
+    setBookmarked(!bookmarked);
+    if (onBookmarkToggle) onBookmarkToggle(); // to refresh the parent state
+  } catch (error) {
+    toast.error("Error updating bookmark");
+    console.error(error);
+  }
+};
+
+
+    const getShortDescription = (text) => {
+        const words = text?.split(" ");
+        return words?.slice(0, 50).join(" ") + (words?.length > 50 ? "..." : "");
+    };
 
     const daysAgoFunction = (mongodbTime) => {
         const createdAt = new Date(mongodbTime);
@@ -15,22 +54,18 @@ const Job = ({ job }) => {
         return Math.floor(timeDifference / (1000 * 24 * 60 * 60));
     };
 
-    const getShortDescription = (text) => {
-        const words = text?.split(" ");
-        return words?.slice(0, 50).join(" ") + (words?.length > 50 ? "..." : "");
-    };
-
     return (
         <div className='p-5 rounded-md shadow-xl bg-white border border-gray-100 min-h-[400px] flex flex-col justify-between'>
             <div className='flex items-center justify-between'>
                 <p className='text-sm text-gray-500'>
                     {daysAgoFunction(job?.createdAt) === 0 ? "Today" : `${daysAgoFunction(job?.createdAt)} days ago`}
                 </p>
-                <Button variant="outline" className="rounded-full" size="icon">
-                    <Bookmark />
+                <Button onClick={handleBookmark} variant="outline" className="rounded-full" size="icon">
+                    {bookmarked ? <BookmarkCheck className="text-blue-500" /> : <Bookmark />}
                 </Button>
             </div>
 
+            
             <div className='flex items-center gap-2 my-2'>
                 <Button className="p-6" variant="outline" size="icon">
                     <Avatar>
@@ -43,6 +78,7 @@ const Job = ({ job }) => {
                 </div>
             </div>
 
+            {/* Job Info */}
             <div>
                 <h1 className='font-bold text-lg my-2'>{job?.title}</h1>
                 <p className='text-sm text-gray-600'>
@@ -69,7 +105,7 @@ const Job = ({ job }) => {
                 <Button className="bg-[#7209b7]">Save For Later</Button>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Job
+export default Job;

@@ -8,21 +8,44 @@ import { motion } from 'framer-motion';
 // const jobsArray = [1, 2, 3, 4, 5, 6, 7, 8];
 
 const Jobs = () => {
-    const { allJobs, searchedQuery } = useSelector(store => store.job);
+    const { allJobs, searchedQuery, searchJobByText } = useSelector(store => store.job);
     const [filterJobs, setFilterJobs] = useState(allJobs);
 
     useEffect(() => {
-        if (searchedQuery) {
-            const filteredJobs = allJobs.filter((job) => {
-                return job.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                    job.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                    job.location.toLowerCase().includes(searchedQuery.toLowerCase())
-            })
-            setFilterJobs(filteredJobs)
-        } else {
-            setFilterJobs(allJobs)
-        }
-    }, [allJobs, searchedQuery]);
+        const { Location, Industry, Salary } = searchedQuery;
+    
+        const filtered = allJobs.filter((job) => {
+            const matchLocation = Location ? job?.location?.toLowerCase() === Location.toLowerCase() : true;
+            const matchIndustry = Industry
+            ? job?.title?.toLowerCase().includes(Industry.toLowerCase().split(' ')[0]) // match on keyword like "backend"
+            : true;
+          
+    
+            let matchSalary = true;
+            if (Salary && job?.salary) {
+                const salaryRange = Salary.replace("LPA", "").split("-").map(Number);
+                const jobSalary = Number(job.salary);
+                if (!isNaN(salaryRange[0]) && !isNaN(salaryRange[1])) {
+                    matchSalary = jobSalary >= salaryRange[0] && jobSalary <= salaryRange[1];
+                }
+            }
+    
+            const matchSearch = searchJobByText
+                ? job?.title?.toLowerCase().includes(searchJobByText.toLowerCase()) ||
+                  job?.description?.toLowerCase().includes(searchJobByText.toLowerCase()) ||
+                  job?.location?.toLowerCase().includes(searchJobByText.toLowerCase())
+                : true;
+    
+            return matchLocation && matchIndustry && matchSalary && matchSearch;
+        });
+    
+        setFilterJobs(filtered);
+    }, [allJobs, searchedQuery, searchJobByText]);
+    
+    
+    
+    
+      
 
     return (
         <div>

@@ -2,13 +2,17 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const jobSlice = createSlice({
     name:"job",
-    initialState:{
-        allJobs:[],
-        allAdminJobs:[],
-        singleJob:null, 
-        searchJobByText:"",
-        allAppliedJobs:[],
-        searchedQuery:"",
+    initialState: {
+        allJobs: [],
+        allAdminJobs: [],
+        singleJob: null, 
+        allAppliedJobs: [],
+        searchJobByText: "", 
+        searchedQuery: {    
+            Location: "",
+            Industry: "",
+            Salary: ""
+        }
     },
     reducers:{
         // actions
