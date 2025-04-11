@@ -21,7 +21,21 @@ const corsOptions = {
     credentials:true
 }
 
-app.use(cors(corsOptions));
+const allowedOrigins = [
+    'http://localhost:5173',
+    'https://job-wala-frontend.onrender.com'
+  ];
+  
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true // <-- Important if you're sending cookies/session
+  }));
 
 const PORT = process.env.PORT || 8000;
 
