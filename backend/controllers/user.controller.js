@@ -5,9 +5,10 @@ import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
-    console.log(req.body);
+    console.log("hiiiiiii")
     try {
         const { fullname, email, phoneNumber, password, role } = req.body;
+        console.log("fullname",fullname)
         if (!fullname || !email || !phoneNumber || !password || !role) {
             return res.status(400).json({ message: "Something is missing", success: false });
         }
