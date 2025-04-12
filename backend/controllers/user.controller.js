@@ -5,6 +5,7 @@ import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
+    console.log(req.body);
     try {
         const { fullname, email, phoneNumber, password, role } = req.body;
         if (!fullname || !email || !phoneNumber || !password || !role) {
@@ -37,7 +38,7 @@ export const register = async (req, res) => {
 
     } catch (error) {
         console.log("Register Error:", error);
-        return res.status(500).json({ message: "Server error", success: false });
+        return res.status(500).json({ message: error.message, success: false });
     }
 };
 
