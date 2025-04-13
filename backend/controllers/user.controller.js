@@ -5,7 +5,7 @@ import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
-    console.log("hiiiiiii")
+    // console.log("hiiiiiii")
     try {
         const { fullname, email, phoneNumber, password, role } = req.body;
         console.log("fullname",fullname)
@@ -70,12 +70,18 @@ export const login = async (req, res) => {
         const { password: _, ...userData } = user.toObject();
 
         return res.status(200)
-            .cookie("token", token, { maxAge: 86400000, httpOnly: true, sameSite: 'strict' })
-            .json({
-                message: `Welcome back ${user.fullname}`,
-                user: userData,
-                success: true
-            });
+        .cookie("token", token, {
+            maxAge: 86400000, 
+            httpOnly: true,
+            sameSite: "None", 
+            secure: true      
+        })
+        .json({
+            message: `Welcome back ${user.fullname}`,
+            user: userData,
+            success: true
+        });
+
 
     } catch (error) {
         console.log("Login Error:", error);
