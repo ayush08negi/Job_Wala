@@ -3,6 +3,7 @@ import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 
 export const registerCompany = async (req, res) => {
+
     try {
         const { companyName } = req.body;
         if (!companyName) {
@@ -18,6 +19,7 @@ export const registerCompany = async (req, res) => {
                 success: false
             })
         };
+
         company = await Company.create({
             name: companyName,
             userId: req.id
