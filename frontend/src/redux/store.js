@@ -28,6 +28,7 @@ const rootReducer = combineReducers({
     application:applicationSlice
 })
 
+
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 
@@ -40,4 +41,6 @@ const store = configureStore({
             },
         }),
 });
+
+console.log(companySlice);
 export default store;

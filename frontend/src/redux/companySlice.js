@@ -21,4 +21,5 @@ const companySlice = createSlice({
     }
 });
 export const {setSingleCompany, setCompanies,setSearchCompanyByText} = companySlice.actions;
+console.log(setCompanies)
 export default companySlice.reducer;

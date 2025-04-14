@@ -21,6 +21,7 @@ const CompanyCreate = () => {
         console.log(companyName);
         try {
             console.log("first");
+            console.log(COMPANY_API_END_POINT, " ", companyName);
             const res = await axios.post(`${COMPANY_API_END_POINT}/register`, {companyName}, {
                 headers:{
                     'Content-Type':'application/json'
