@@ -10,7 +10,7 @@ const filterData = [
   },
   {
     filterType: 'Industry',
-    array: ['Software Engineering', 'Backend Developer', 'FullStack Developer']
+    array: ['Software Engineer', 'Backend Engineer', 'FullStack Engineer']
   },
   {
     filterType: 'Salary',

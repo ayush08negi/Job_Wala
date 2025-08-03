@@ -17,6 +17,7 @@ const Home = () => {
       navigate("/admin/companies");
     }
   }, []);
+  
   return (
     <div>
       <Navbar />

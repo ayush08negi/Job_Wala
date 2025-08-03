@@ -29,7 +29,7 @@ const CompanyCreate = () => {
                 withCredentials:true
             });
 
-            console.log("2")
+            // console.log("2")
 
 
             if(res?.data?.success){

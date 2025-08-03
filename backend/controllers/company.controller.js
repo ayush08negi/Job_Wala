@@ -53,7 +53,6 @@ export const getCompany = async (req, res) => {
         console.log(error);
     }
 }
-// get company by id
 export const getCompanyById = async (req, res) => {
     try {
         const companyId = req.params.id;
@@ -72,32 +71,46 @@ export const getCompanyById = async (req, res) => {
         console.log(error);
     }
 }
+
 export const updateCompany = async (req, res) => {
+    console.log("inside updatecompany");
     try {
         const { name, description, website, location } = req.body;
- 
-        const file = req.file;
-        // idhar cloudinary ayega
-        const fileUri = getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-        const logo = cloudResponse.secure_url;
-    
-        const updateData = { name, description, website, location, logo };
 
-        const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
+        const company = await Company.findById(req.params.id);
 
         if (!company) {
             return res.status(404).json({
                 message: "Company not found.",
                 success: false
-            })
+            });
         }
+
+        // Update the fields
+        company.name = name;
+        company.description = description;
+        company.website = website;
+        company.location = location;
+
+        // Only update logo if new file is provided
+        if (req.file) {
+            const fileUri = getDataUri(req.file);
+            const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+            company.logo = cloudResponse.secure_url;
+        }
+
+        await company.save();
+
         return res.status(200).json({
-            message:"Company information updated.",
-            success:true
-        })
+            message: "Company information updated.",
+            success: true
+        });
 
     } catch (error) {
         console.log(error);
+        return res.status(400).json({
+            message: error.message,
+            success: false
+        });
     }
-}
+};

@@ -11,7 +11,7 @@ import {
     PURGE,
     REGISTER,
 } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+import storage from 'redux-persist/lib/storage';
 import companySlice from "./companySlice";
 import applicationSlice from "./applicationSlice";
 
@@ -42,5 +42,5 @@ const store = configureStore({
         }),
 });
 
-console.log(companySlice);
+// console.log(companySlice);
 export default store;

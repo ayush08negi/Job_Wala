@@ -9,7 +9,6 @@ const Browse = () => {
     useGetAllJobs();
     const { allJobs = [], searchedQuery } = useSelector(store => store.job);
 
-
     const dispatch = useDispatch();
 
     useEffect(() => {

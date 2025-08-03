@@ -5,10 +5,11 @@ import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
-    // console.log("hiiiiiii")
+    // console.log("hiiiiiii");
     try {
         const { fullname, email, phoneNumber, password, role } = req.body;
-        console.log("fullname",fullname)
+        // console.log("fullname",fullname)
+        
         if (!fullname || !email || !phoneNumber || !password || !role) {
             return res.status(400).json({ message: "Something is missing", success: false });
         }
@@ -64,6 +65,7 @@ export const login = async (req, res) => {
         if (role !== user.role) {
             return res.status(400).json({ message: "Account doesn't exist with this role", success: false });
         }
+        
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 

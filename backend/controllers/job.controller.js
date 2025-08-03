@@ -1,17 +1,22 @@
 import { Job } from "../models/job.model.js";
 
-// admin post krega job
 export const postJob = async (req, res) => {
     try {
-        const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
+        const {
+            title, description, requirements, salary,
+            location, jobType, experience, position, companyId
+        } = req.body;
+
         const userId = req.id;
 
-        if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
+        if (!title || !description || !requirements || !salary || !location ||
+            !jobType || !experience || !position || !companyId) {
             return res.status(400).json({
-                message: "Somethin is missing.",
+                message: "Something is missing.",
                 success: false
-            })
-        };
+            });
+        }
+
         const job = await Job.create({
             title,
             description,
@@ -24,16 +29,23 @@ export const postJob = async (req, res) => {
             company: companyId,
             created_by: userId
         });
+
         return res.status(201).json({
             message: "New job created successfully.",
             job,
             success: true
         });
+
     } catch (error) {
-        console.log(error);
+        console.error("Error while posting job:", error);
+        return res.status(500).json({
+            message: "Internal server error while posting job.",
+            error: error.message,
+            success: false
+        });
     }
 }
-// student k liye
+
 export const getAllJobs = async (req, res) => {
     try {
         const keyword = req.query.keyword || "";
@@ -60,7 +72,7 @@ export const getAllJobs = async (req, res) => {
         console.log(error);
     }
 }
-// student
+
 export const getJobById = async (req, res) => {
     try {
         const jobId = req.params.id;
@@ -78,7 +90,7 @@ export const getJobById = async (req, res) => {
         console.log(error);
     }
 }
-// admin kitne job create kra hai abhi tk
+
 export const getAdminJobs = async (req, res) => {
     try {
         const adminId = req.id;
@@ -100,3 +112,34 @@ export const getAdminJobs = async (req, res) => {
         console.log(error);
     }
 }
+
+// export const updatejob = async(req,res) =>{
+//     try{ 
+//        const { title, description, requirements, salary,location, jobType, experience, position, companyId } = req.body;
+//        const userId = req.id;
+//        const updatedata = { title,description, requirements, salary, location, jobType, experience, position, companyId};
+
+//        const job = await Job.findByIdAndUpdate(req.params.id, updatedata , { new: true });
+
+//        if (!job) {
+//             return res.status(404).json({
+//                 message: "Job not found.",
+//                 success: false
+//             })
+//         }
+
+//          return res.status(200).json({
+//             message:"Job information updated.",
+//             success:true
+//         })
+
+//     } catch(error){
+//        console.log(error);
+//         return res.status(400).json({
+//             message: error.message,
+//             success:false
+//         })
+//     }
+     
+    
+// }
